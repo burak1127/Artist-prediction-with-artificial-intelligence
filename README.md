@@ -16,4 +16,4 @@ The model was trained and evaluated on a comprehensive dataset of song lyrics, a
 ## Installation
 1. Clone the repository:
    ```bash
-   git clone [https://github.com/KULLANICI_ADIN/artist-prediction-from-lyrics.git](https://github.com/KULLANICI_ADIN/artist-prediction-from-lyrics.git)
+   git clone [https://burak1127/artist-prediction-from-lyrics.git](https://github.com/burak1127/artist-prediction-from-lyrics.git)
