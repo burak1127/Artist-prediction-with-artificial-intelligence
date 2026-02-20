@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <title>Tahmin Modülü</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        /* İpucu Kelimeler İçin Özel Stil */
+        .ipucu-container {
+            margin-top: 10px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px;
+        }
+        .ipucu-badge {
+            background: rgba(255, 255, 255, 0.15);
+            color: #ddd;
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 0.8em;
+            font-weight: 500;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+        .ipucu-baslik {
+            font-size: 0.85em; 
+            color: #888; 
+            margin-top: 8px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="/" class="nav-link">⬅ Ana Sayfaya Dön</a>
+        <h2>🧠 Sanatçı Tahmin Modülü</h2>
+        
+        <form method="post">
+            <textarea name="sarki_sozu" placeholder="Analiz edilecek şarkı sözlerini buraya yapıştır..." style="height: 150px;">{{ soz }}</textarea>
+            <button type="submit">Analiz Et 🚀</button>
+        </form>
+
+        {% if top3 %}
+        <div style="margin-top: 40px;">
+            <h3 style="color: #aaa; font-size: 14px; text-transform: uppercase; letter-spacing: 1px;">Analiz Sonuçları</h3>
+            
+            {% for item in top3 %}
+            <div class="sonuc-karti {% if loop.index == 1 %}birinci{% elif loop.index == 2 %}ikinci{% else %}ucuncu{% endif %}">
+                
+                <div class="sanatci-gorsel-container">
+                    <img src="https://via.placeholder.com/100/333333/888888?text=?" 
+                         alt="{{ item.sanatci }}" 
+                         class="sanatci-resim" 
+                         id="img-{{ loop.index }}"
+                         data-artist="{{ item.sanatci }}">
+
+                    <div style="flex-grow: 1;">
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <div style="font-size: 1.2em; font-weight: bold; color: #fff;">#{{ loop.index }} {{ item.sanatci }}</div>
+                            <div style="font-size: 0.9em; color: #aaa;">Güven %{{ item.oran }}</div>
+                        </div>
+                        
+                        <div class="oran-bar-container" style="width: 100%;">
+                            <div class="oran-bar" style="width: {{ item.ham_puan }}%;"></div>
+                        </div>
+
+                        {% if item.ipucu and item.ipucu|length > 0 %}
+                        <div class="ipucu-baslik">
+                            <span>🔍 İmza Kelimeler:</span>
+                        </div>
+                        <div class="ipucu-container">
+                            {% for kelime in item.ipucu %}
+                            <span class="ipucu-badge">{{ kelime }}</span>
+                            {% endfor %}
+                        </div>
+                        {% endif %}
+
+                    </div>
+                </div>
+
+                <a href="https://open.spotify.com/search/{{ item.sanatci }}" target="_blank" class="spotify-btn" style="margin-left: 15px;">
+                    Dinle
+                </a>
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+        
+        {% if hata %}
+        <div class="mesaj mesaj-error">{{ hata }}</div>
+        {% endif %}
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const images = document.querySelectorAll('.sanatci-resim');
+            images.forEach(img => {
+                const artistName = img.getAttribute('data-artist');
+                const script = document.createElement('script');
+                script.src = `https://api.deezer.com/search/artist?q=${encodeURIComponent(artistName)}&output=jsonp&callback=deezerCallback_${img.id.replace('-','_')}`;
+                document.body.appendChild(script);
+                window[`deezerCallback_${img.id.replace('-','_')}`] = function(data) {
+                    if (data.data && data.data.length > 0) {
+                        img.src = data.data[0].picture_medium;
+                    }
+                };
+            });
+        });
+    </script>
+</body>
+</html>

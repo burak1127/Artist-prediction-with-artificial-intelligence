@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <title>Bunu Kim Söyledi? - Oyun Modu</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+    <div class="container" style="text-align: center;">
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+            <a href="/" class="nav-link">⬅ Ana Sayfa</a>
+            <div class="puan-kutusu">Skor: <span id="skor">0</span></div>
+        </div>
+
+        <h2 style="margin-bottom: 10px;">🎮 Bunu Kim Söyledi?</h2>
+        <p style="color: #aaa; margin-bottom: 30px;">Aşağıdaki sözler hangi sanatçıya ait?</p>
+
+        <div class="sonuc-karti" style="display: block; text-align: center; padding: 40px; font-size: 1.2em; font-style: italic; color: #fff; border-left: none; border-top: 4px solid #1DB954;">
+            "{{ soru }}"
+        </div>
+
+        <div class="siklar-grid">
+            {% for sik in siklar %}
+            <button onclick="cevapVer('{{ sik }}', '{{ dogru }}')" class="btn sik-btn">
+                {{ sik }}
+            </button>
+            {% endfor %}
+        </div>
+        
+        <br>
+        <button onclick="location.reload();" class="btn" style="background: #333; width: auto; padding: 10px 30px;">Pas Geç 🔄</button>
+
+    </div>
+
+    <script>
+        // Sayfa yüklendiğinde skoru hafızadan çek
+        let mevcutSkor = localStorage.getItem('oyunSkoru') ? parseInt(localStorage.getItem('oyunSkoru')) : 0;
+        document.getElementById('skor').innerText = mevcutSkor;
+
+        function cevapVer(secilen, dogru) {
+            if (secilen === dogru) {
+                // DOĞRU CEVAP
+                mevcutSkor += 10;
+                localStorage.setItem('oyunSkoru', mevcutSkor);
+                document.getElementById('skor').innerText = mevcutSkor;
+                
+                Swal.fire({
+                    title: 'TEBRİKLER! 🎉',
+                    text: 'Doğru bildin! +10 Puan',
+                    icon: 'success',
+                    background: '#222',
+                    color: '#fff',
+                    confirmButtonText: 'Sıradaki Soru ➡',
+                    confirmButtonColor: '#1DB954'
+                }).then((result) => {
+                    location.reload(); // Sayfayı yenile ve yeni soru gelsin
+                });
+
+            } else {
+                // YANLIŞ CEVAP
+                
+                if(mevcutSkor > 0) mevcutSkor -= 5; 
+                localStorage.setItem('oyunSkoru', mevcutSkor);
+                document.getElementById('skor').innerText = mevcutSkor;
+
+                Swal.fire({
+                    title: 'ÜZGÜNÜM... 😔',
+                    text: `Yanlış cevap! Doğrusu: ${dogru}`,
+                    icon: 'error',
+                    background: '#222',
+                    color: '#fff',
+                    confirmButtonText: 'Tekrar Dene 🔄',
+                    confirmButtonColor: '#d33'
+                }).then((result) => {
+                    location.reload();
+                });
+            }
+        }
+    </script>
+</body>
+</html>

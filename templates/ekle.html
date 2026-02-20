@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <title>Veri Ekleme Paneli</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <div class="container" style="max-width: 900px;">
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+            <a href="/" class="nav-link">⬅ Ana Sayfa</a>
+            <a href="/logout" class="nav-link" style="color: #ff416c;">Çıkış Yap 🔒</a>
+        </div>
+
+        <h2>📂 Veri Seti Yönetimi</h2>
+        
+        <div style="background: rgba(255,255,255,0.05); padding: 20px; border-radius: 10px; margin-bottom: 30px;">
+            <p style="font-size: 0.9em; color: #ccc;">
+                <strong>💡 İpucu:</strong> Yeni bir sanatçı ekliyorsanız, lütfen en az 10 farklı satır (kıta) girdiğinizden emin olun. Modelin öğrenmesi için veri çeşitliliği şarttır.
+            </p>
+        </div>
+
+        <form method="post">
+            <label style="display:block; margin-bottom: 10px; font-weight: 600;">Sanatçı Adı:</label>
+            <input type="text" name="sanatci_adi" placeholder="Örn: Ceza" required>
+            
+            <label style="display:block; margin-bottom: 10px; margin-top: 20px; font-weight: 600;">Şarkı Sözleri (Her kutuya bir kıta/bölüm):</label>
+            
+            <div style="height: 400px; overflow-y: auto; padding-right: 10px; margin-bottom: 20px;">
+                {% for i in range(1, 56) %}
+                <div style="display: flex; gap: 10px; align-items: center; margin-bottom: 10px;">
+                    <span style="color: #666; font-size: 0.8em; width: 25px;">{{ i }}.</span>
+                    <input type="text" name="coklu_sozler[]" placeholder="Sözü buraya yapıştır..." style="margin-bottom: 0;">
+                </div>
+                {% endfor %}
+            </div>
+            
+            <button type="submit">Verileri Kaydet 💾</button>
+        </form>
+
+        <hr style="border: 0; border-top: 1px solid #333; margin: 40px 0;">
+
+        <h3 style="color: #aaa;">Yapay Zeka İşlemleri</h3>
+        <form method="post" action="/egit">
+            <button type="submit" class="btn btn-danger">Modeli Yeniden Eğit 🔥</button>
+        </form>
+
+        {% if mesaj %}
+            {% if '❌' in mesaj %}
+                <div class="mesaj mesaj-error">{{ mesaj }}</div>
+            {% else %}
+                <div class="mesaj mesaj-success">{{ mesaj }}</div>
+            {% endif %}
+        {% endif %}
+    </div>
+</body>
+</html>

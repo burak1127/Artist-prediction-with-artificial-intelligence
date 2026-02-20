@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <title>Sanatçı Listesi</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+    <div class="container">
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+            <a href="/" class="nav-link">⬅ Ana Sayfa</a>
+            <div style="color: #aaa; font-size: 0.9em;">Toplam: {{ sanatcilar|length }} Sanatçı</div>
+        </div>
+
+        <h2>🎤 Mevcut Sanatçı Listesi</h2>
+        <p style="color: #ccc; margin-bottom: 30px;">
+            Veritabanında kayıtlı olan ve modelin tanıdığı sanatçılar aşağıdadır.
+        </p>
+        
+        <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 15px;">
+            {% for sanatci in sanatcilar %}
+            <div class="sonuc-karti" style="border-left: 4px solid #1DB954; justify-content: flex-start; gap: 15px; padding: 15px;">
+                
+                <img src="https://via.placeholder.com/60/333333/888888?text=?" 
+                     class="sanatci-resim" 
+                     id="img-{{ loop.index }}"
+                     data-artist="{{ sanatci }}"
+                     style="width: 50px; height: 50px; border-width: 2px;">
+                
+                <div style="font-weight: 600; color: #fff; font-size: 1.1em;">
+                    {{ sanatci }}
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const images = document.querySelectorAll('.sanatci-resim');
+
+            images.forEach(img => {
+                const artistName = img.getAttribute('data-artist');
+                
+                // Deezer API ile fotoğraf çek
+                const script = document.createElement('script');
+                script.src = `https://api.deezer.com/search/artist?q=${encodeURIComponent(artistName)}&output=jsonp&callback=deezerCallback_${img.id.replace('-','_')}`;
+                document.body.appendChild(script);
+
+                window[`deezerCallback_${img.id.replace('-','_')}`] = function(data) {
+                    if (data.data && data.data.length > 0) {
+                        img.src = data.data[0].picture_medium;
+                    }
+                };
+            });
+        });
+    </script>
+</body>
+</html>

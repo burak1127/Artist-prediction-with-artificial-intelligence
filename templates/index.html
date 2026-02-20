@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <title>AI Şarkı Analizi</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <div class="container" style="text-align: center; margin-top: 100px;">
+        <h1 style="font-size: 3em; background: -webkit-linear-gradient(#ffffff, #ffffff); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">🎵 AI ŞARKI ANALİZİ</h1>
+        <p style="color: #aaa; font-size: 1.2em; margin-bottom: 40px;">Yapay zeka ile şarkı sözlerini analiz edin ve sanatçıyı keşfedin.</p>
+        
+        <div style="display: flex; gap: 20px; justify-content: center;">
+            <a href="/tahmin" class="btn" style="width: auto; padding: 15px 40px; background: var(--button-gradient);">Analiz Et 🧠</a>
+            <a href="/ekle" class="btn" style="width: auto; padding: 15px 40px; background: #333;">Veri Ekle 💾</a>
+        </div>
+
+        <div style="margin-top: 20px;">
+    <a href="/oyun" class="btn" style="background: linear-gradient(45deg, #034d5f, #2493dd); font-size: 1.2em;">
+        🎮 Oyuna Başla: Bunu Kim Söyledi?
+    </a>
+</div>
+
+        <div style="margin-top: 50px;">
+            <a href="/sanatcilar" style="color: #6b6464; font-size: 0.9em;">Mevcut Sanatçı Listesi</a>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <title>Giriş Yap</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <div class="login-container">
+        <div class="login-box">
+            <h2 style="border: none;">🔐 Yetkili Girişi</h2>
+            <p style="color: #aaa; margin-bottom: 30px;">Devam etmek için lütfen şifrenizi girin.</p>
+            
+            {% if hata %}
+            <div class="mesaj mesaj-error" style="margin-bottom: 20px;">{{ hata }}</div>
+            {% endif %}
+
+            <form method="post">
+                <input type="password" name="sifre" placeholder="Şifre" required style="text-align: center;">
+                <button type="submit">Giriş Yap</button>
+            </form>
+
+            <a href="/" class="nav-link" style="margin-top: 30px;">⬅ İptal</a>
+        </div>
+    </div>
+</body>
+</html>
